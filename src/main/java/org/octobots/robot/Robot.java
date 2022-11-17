@@ -7,11 +7,12 @@ package org.octobots.robot;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
+import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.XboxController;
 
 public class Robot extends TimedRobot {
-    private final XboxController m_controller = new XboxController(0);
+    private final Joystick joystick = new Joystick(1);
     private final DriveTrain m_swerve = new DriveTrain();
 
     // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
@@ -21,8 +22,6 @@ public class Robot extends TimedRobot {
 
     @Override
     public void autonomousPeriodic() {
-        driveWithJoystick(false);
-        m_swerve.updateOdometry();
     }
 
     @Override
@@ -31,25 +30,17 @@ public class Robot extends TimedRobot {
     }
 
     private void driveWithJoystick(boolean fieldRelative) {
-        // Get the x speed. We are inverting this because Xbox controllers return
-        // negative values when we push forward.
+        //x move
         final var xSpeed =
-                -m_xspeedLimiter.calculate(MathUtil.applyDeadband(m_controller.getLeftY(), 0.02))
+                m_xspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
                         * DriveTrain.kMaxSpeed;
-
-        // Get the y speed or sideways/strafe speed. We are inverting this because
-        // we want a positive value when we pull to the left. Xbox controllers
-        // return positive values when you pull to the right by default.
+        //y move
         final var ySpeed =
-                -m_yspeedLimiter.calculate(MathUtil.applyDeadband(m_controller.getLeftX(), 0.02))
+                m_yspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
                         * DriveTrain.kMaxSpeed;
-
-        // Get the rate of angular rotation. We are inverting this because we want a
-        // positive value when we pull to the left (remember, CCW is positive in
-        // mathematics). Xbox controllers return positive values when you pull to
-        // the right by default.
+        //speen
         final var rot =
-                -m_rotLimiter.calculate(MathUtil.applyDeadband(m_controller.getRightX(), 0.02))
+                m_rotLimiter.calculate(MathUtil.applyDeadband(joystick.getZ(), 0.02))
                         * DriveTrain.kMaxAngularSpeed;
 
         m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative);

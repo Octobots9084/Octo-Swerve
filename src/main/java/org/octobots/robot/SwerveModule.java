@@ -23,8 +23,7 @@ import java.util.ArrayList;
 
 
 public class SwerveModule {
-    private static final double kWheelRadius = 0.0508;
-    private static final int kEncoderResolution = 4096;
+
     private static final double WHEEL_RADIUS = 0.03915;
     private static final int ENCODER_RESOLUTION = 4096;
     private static final double STEER_MOTOR_TICK_TO_ANGLE = 2 * Math.PI / ENCODER_RESOLUTION; // radians
@@ -50,35 +49,20 @@ public class SwerveModule {
             TIMEOUT_MS, 10
     );
     private static final PIDConfig DM_MM_PID = new PIDConfig(0.035, 0.0001, 0, 0.06);
-
     private static final double kModuleMaxAngularVelocity = DriveTrain.kMaxAngularSpeed;
     private static final double kModuleMaxAngularAcceleration =
             2 * Math.PI; // radians per second squared
-
+    private final double zeroTicks;
     private final WPI_TalonFX driveMotor;
     private final WPI_TalonSRX steeringMotor;
-
-    // Gains are for example purposes only - must be determined for your own robot!
-    private final PIDController m_drivePIDController = new PIDController(1, 0, 0);
-
-    // Gains are for example purposes only - must be determined for your own robot!
-    private final ProfiledPIDController m_turningPIDController =
-            new ProfiledPIDController(
-                    1,
-                    0,
-                    0,
-                    new TrapezoidProfile.Constraints(
-                            kModuleMaxAngularVelocity, kModuleMaxAngularAcceleration));
-
-    // Gains are for example purposes only - must be determined for your own robot!
-    private final SimpleMotorFeedforward m_driveFeedforward = new SimpleMotorFeedforward(1, 3);
-    private final SimpleMotorFeedforward m_turnFeedforward = new SimpleMotorFeedforward(1, 0.5);
 
     /**
      * Constructs a SwerveModule with a drive motor, turning motor, drive encoder and turning encoder.
      *
      */
-    public SwerveModule(int driveMotorChannel, int steeringMotorChannel, double zeroTicks) {
+    public SwerveModule(int driveMotorChannel, int steeringMotorChannel, double absZeroTicks) {
+
+
         // Steer Motor
         this.steeringMotor = new WPI_TalonSRX(steeringMotorChannel);
         TM_MM_PID.setTolerance(0);
@@ -97,13 +81,15 @@ public class SwerveModule {
         driveMotor.setNeutralMode(NeutralMode.Brake);
 
         // Current Limits
-        this.driveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 50 * 0.4, 50 * 0.4, 0.05)); //How much current the motor can use (outputwise)
-        this.driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 53 * 0.4, 53 * 0.4, 0.05)); //How much current can be supplied to the motor
+        this.driveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 30, 0.05)); //How much current the motor can use (outputwise)
+        this.driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 33, 33, 0.05)); //How much current can be supplied to the motor
 
         this.steeringMotor.enableCurrentLimit(true);
-        this.steeringMotor.configPeakCurrentDuration(0);
+        this.steeringMotor.configPeakCurrentDuration(10);
         this.steeringMotor.configContinuousCurrentLimit(20);
         this.steeringMotor.configPeakCurrentLimit(21);
+
+        this.zeroTicks = steeringMotor.getSelectedSensorPosition() + 2 * absZeroTicks;
 
         try {
             Thread.sleep(200);
@@ -130,7 +116,7 @@ public class SwerveModule {
      */
     public void setDesiredState(SwerveModuleState desiredState) {
 //        var optimizedAngle = desiredState.optimize(desiredState, );
-        setDriveMotorVelocity(desiredState.speedMetersPerSecond);
-        setSteeringMotorAngle(desiredState.angle.getRadians()/(2*Math.PI)*4096);
+        driveMotor.set(ControlMode.Velocity, desiredState.speedMetersPerSecond);
+        steeringMotor.set(ControlMode.MotionMagic, desiredState.angle.getRadians()/(2*Math.PI)*ENCODER_RESOLUTION);
     }
 }

@@ -21,10 +21,11 @@ public class DriveTrain {
     private final Translation2d m_backLeftLocation = new Translation2d(-0.381, 0.381);
     private final Translation2d m_backRightLocation = new Translation2d(-0.381, -0.381);
 
-    private final SwerveModule m_frontLeft = new SwerveModule();
-    private final SwerveModule m_frontRight = new SwerveModule(3, 4, 4, 5, 6, 7);
-    private final SwerveModule m_backLeft = new SwerveModule(5, 6, 8, 9, 10, 11);
-    private final SwerveModule m_backRight = new SwerveModule(7, 8, 12, 13, 14, 15);
+    //TODO: find zero tick values
+    private final SwerveModule m_frontRight = new SwerveModule(1,2,0);
+    private final SwerveModule m_frontLeft = new SwerveModule(3,4,0);
+    private final SwerveModule m_backRight = new SwerveModule(5,6,0);
+    private final SwerveModule m_backLeft = new SwerveModule(7,8,0);
 
     private final AnalogGyro m_gyro = new AnalogGyro(0);
 
@@ -59,14 +60,4 @@ public class DriveTrain {
         m_backLeft.setDesiredState(swerveModuleStates[2]);
         m_backRight.setDesiredState(swerveModuleStates[3]);
     }
-
-    /** Updates the field relative position of the robot. */
-////    public void updateOdometry() {
-//        m_odometry.update(
-//                m_gyro.getRotation2d(),
-//                m_frontLeft.getPosition(),
-//                m_frontRight.getPosition(),
-//                m_backLeft.getPosition(),
-//                m_backRight.getPosition());
-//    }
 }
