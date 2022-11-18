@@ -41,7 +41,7 @@ public class DriveTrain {
     private final Translation2d backRightLocation = new Translation2d(-0.381, -0.381);
 
     //TODO: find zero tick values
-    private final SwerveModule m_frontRight = new SwerveModule(1,2,0);
+    private final SwerveModule frontRight = new SwerveModule(1,2,0);
     private final SwerveModule frontLeft = new SwerveModule(3,4,0);
     private final SwerveModule backRight = new SwerveModule(5,6,0);
     private final SwerveModule backLeft = new SwerveModule(7,8,0);
@@ -72,7 +72,7 @@ public class DriveTrain {
                                 : new ChassisSpeeds(xSpeed, ySpeed, rot));
         SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, MAX_SPEED);
         frontLeft.setDesiredState(swerveModuleStates[0]);
-        m_frontRight.setDesiredState(swerveModuleStates[1]);
+        frontRight.setDesiredState(swerveModuleStates[1]);
         backLeft.setDesiredState(swerveModuleStates[2]);
         backRight.setDesiredState(swerveModuleStates[3]);
     }
