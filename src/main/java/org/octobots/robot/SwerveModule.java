@@ -60,8 +60,8 @@ public class SwerveModule {
             TIMEOUT_MS, 10
     );
     private static final PIDConfig DM_MM_PID = new PIDConfig(0.035, 0.0001, 0, 0.06);
-    private static final double kModuleMaxAngularVelocity = DriveTrain.MAX_ANGULAR_SPEED;
-    private static final double kModuleMaxAngularAcceleration =
+    private static final double MODULE_MAX_ANGULAR_VELOCITY = DriveTrain.MAX_ANGULAR_SPEED;
+    private static final double MODULE_MAX_ANGULAR_ACCELERATION =
             2 * Math.PI; // radians per second squared
     private final double zeroTicks;
     private final WPI_TalonFX driveMotor;
@@ -92,14 +92,14 @@ public class SwerveModule {
         driveMotor.setNeutralMode(NeutralMode.Brake);
 
         // Current Limits
-        this.driveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 30, 0.05)); //How much current the motor can use (outputwise)
+        this.driveMotor.configStatorCurrentLimit(new StatorCurrentLimitConfiguration(true, 30, 30, 0.05)); //How much current the motor can use (output wise)
         this.driveMotor.configSupplyCurrentLimit(new SupplyCurrentLimitConfiguration(true, 33, 33, 0.05)); //How much current can be supplied to the motor
 
         this.steeringMotor.enableCurrentLimit(true);
         this.steeringMotor.configPeakCurrentDuration(10);
         this.steeringMotor.configContinuousCurrentLimit(20);
         this.steeringMotor.configPeakCurrentLimit(21);
-
+        this.steeringMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
         this.zeroTicks = steeringMotor.getSelectedSensorPosition() + 2 * absZeroTicks;
 
         try {
@@ -109,16 +109,6 @@ public class SwerveModule {
         }
     }
 
-
-    /**
-     * Returns the current position of the module.
-     *
-     * @return The current position of the module.
-     */
-//    public SwerveModuleState getPosition() {
-//        return new SwerveModuleState(
-//                m_driveEncoder.getDistance(), new Rotation2d(m_turningEncoder.get()));
-//    }
 
     /**
      * Sets the desired state for the module.

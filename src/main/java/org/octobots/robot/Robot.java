@@ -35,8 +35,8 @@ public class Robot extends TimedRobot {
     private final DriveTrain swerve = new DriveTrain();
 
     // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
-    private final SlewRateLimiter xspeedLimiter = new SlewRateLimiter(3);
-    private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
+    private final SlewRateLimiter xLimiter = new SlewRateLimiter(3);
+    private final SlewRateLimiter yLimiter = new SlewRateLimiter(3);
     private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
     @Override
@@ -51,13 +51,13 @@ public class Robot extends TimedRobot {
     private void driveWithJoystick(boolean fieldRelative) {
         //x move
         final var xSpeed =
-                xspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
+                xLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
                         * DriveTrain.MAX_SPEED;
         //y move
         final var ySpeed =
-                yspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
+                yLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
                         * DriveTrain.MAX_SPEED;
-        //speen
+        //spiiiiiiiiiiiiiiiiin
         final var rot =
                 rotLimiter.calculate(MathUtil.applyDeadband(joystick.getZ(), 0.02))
                         * DriveTrain.MAX_ANGULAR_SPEED;
