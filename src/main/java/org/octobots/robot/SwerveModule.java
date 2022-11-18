@@ -26,18 +26,9 @@ package org.octobots.robot;
 //package edu.wpi.first.wpilibj.examples.swervebot;
 
 import com.ctre.phoenix.motorcontrol.*;
-import com.ctre.phoenix.motorcontrol.can.TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonFX;
 import com.ctre.phoenix.motorcontrol.can.WPI_TalonSRX;
-import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.controller.SimpleMotorFeedforward;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
-import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.MotorController;
-import edu.wpi.first.wpilibj.motorcontrol.PWMSparkMax;
 
 import java.util.ArrayList;
 
@@ -69,7 +60,7 @@ public class SwerveModule {
             TIMEOUT_MS, 10
     );
     private static final PIDConfig DM_MM_PID = new PIDConfig(0.035, 0.0001, 0, 0.06);
-    private static final double kModuleMaxAngularVelocity = DriveTrain.kMaxAngularSpeed;
+    private static final double kModuleMaxAngularVelocity = DriveTrain.MAX_ANGULAR_SPEED;
     private static final double kModuleMaxAngularAcceleration =
             2 * Math.PI; // radians per second squared
     private final double zeroTicks;

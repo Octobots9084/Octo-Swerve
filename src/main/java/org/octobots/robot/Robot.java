@@ -29,16 +29,15 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.wpilibj.Joystick;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.XboxController;
 
 public class Robot extends TimedRobot {
     private final Joystick joystick = new Joystick(1);
-    private final DriveTrain m_swerve = new DriveTrain();
+    private final DriveTrain swerve = new DriveTrain();
 
     // Slew rate limiters to make joystick inputs more gentle; 1/3 sec from 0 to 1.
-    private final SlewRateLimiter m_xspeedLimiter = new SlewRateLimiter(3);
-    private final SlewRateLimiter m_yspeedLimiter = new SlewRateLimiter(3);
-    private final SlewRateLimiter m_rotLimiter = new SlewRateLimiter(3);
+    private final SlewRateLimiter xspeedLimiter = new SlewRateLimiter(3);
+    private final SlewRateLimiter yspeedLimiter = new SlewRateLimiter(3);
+    private final SlewRateLimiter rotLimiter = new SlewRateLimiter(3);
 
     @Override
     public void autonomousPeriodic() {
@@ -52,17 +51,17 @@ public class Robot extends TimedRobot {
     private void driveWithJoystick(boolean fieldRelative) {
         //x move
         final var xSpeed =
-                m_xspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
-                        * DriveTrain.kMaxSpeed;
+                xspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
+                        * DriveTrain.MAX_SPEED;
         //y move
         final var ySpeed =
-                m_yspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
-                        * DriveTrain.kMaxSpeed;
+                yspeedLimiter.calculate(MathUtil.applyDeadband(joystick.getY(), 0.02))
+                        * DriveTrain.MAX_SPEED;
         //speen
         final var rot =
-                m_rotLimiter.calculate(MathUtil.applyDeadband(joystick.getZ(), 0.02))
-                        * DriveTrain.kMaxAngularSpeed;
+                rotLimiter.calculate(MathUtil.applyDeadband(joystick.getZ(), 0.02))
+                        * DriveTrain.MAX_ANGULAR_SPEED;
 
-        m_swerve.drive(xSpeed, ySpeed, rot, fieldRelative);
+        swerve.drive(xSpeed, ySpeed, rot, fieldRelative);
     }
 }
