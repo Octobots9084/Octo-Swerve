@@ -145,6 +145,6 @@ public class SwerveModule {
     public void setDesiredState(SwerveModuleState desiredState) {
 //        var optimizedAngle = desiredState.optimize(desiredState, );
         setDriveMotorVelocity(desiredState.speedMetersPerSecond);
-        setSteeringMotorAngle(desiredState.angle.getRadians()/(2*Math.PI)*4096);
+        setSteeringMotorAngle(desiredState.angle.getRadians());
     }
 }
