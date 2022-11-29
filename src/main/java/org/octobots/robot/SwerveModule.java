@@ -99,8 +99,8 @@ public class SwerveModule {
         this.steeringMotor.configPeakCurrentDuration(10);
         this.steeringMotor.configContinuousCurrentLimit(20);
         this.steeringMotor.configPeakCurrentLimit(21);
-        this.steeringMotor.configSelectedFeedbackSensor(FeedbackDevice.IntegratedSensor);
-        this.zeroTicks = steeringMotor.getSelectedSensorPosition() + 2 * absZeroTicks;
+        this.steeringMotor.configSelectedFeedbackSensor(FeedbackDevice.PulseWidthEncodedPosition);
+        this.zeroTicks = steeringMotor.getSelectedSensorPosition();
 
         try {
             Thread.sleep(200);
